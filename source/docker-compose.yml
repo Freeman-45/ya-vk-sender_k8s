@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: saas_user
+      POSTGRES_PASSWORD: saas_password
+      POSTGRES_DB: saas_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saas_user -d saas_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://saas_user:saas_password@db:5432/saas_db
+      - SECRET_KEY=super_secret_jwt_key_change_me_in_prod
+      - ENCRYPTION_KEY=8jR9uZ0LqOqA_8G5_G5_G5_G5_G5_G5_G5_G5_G5_G4=
+      - ALLOW_REGISTRATION=true
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:5000"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

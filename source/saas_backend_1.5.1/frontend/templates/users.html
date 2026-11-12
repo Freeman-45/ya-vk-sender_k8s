@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="d-flex justify-content-between mb-4">
+        <h5>Управление пользователями</h5>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <i class="fa-solid fa-plus"></i> Добавить пользователя
+        </button>
+    </div>
+    
+    <div class="card p-3">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Роль</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td><strong>{{ u.email }}</strong></td>
+                    <td>
+                        {% if u.is_admin %}
+                            <span class="badge bg-danger">Администратор</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Пользователь</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="3" class="text-center text-muted py-4">Пользователей пока нет</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Модальное окно добавления -->
+    <div class="modal fade" id="addUserModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="POST" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Новый пользователь</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Email (совпадающий с Яндекс ID)</label>
+                <input type="email" name="email" class="form-control" required placeholder="user@yandex.ru">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Пароль (для входа без Яндекса)</label>
+                <input type="password" name="password" class="form-control" required placeholder="••••••••">
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" name="is_admin">
+                <label class="form-check-label">Права администратора</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Создать</button>
+          </div>
+        </form>
+      </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="d-flex justify-content-between mb-4">
+        <h5>Ваши Яндекс.Формы</h5>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormModal">
+            <i class="fa-solid fa-plus"></i> Добавить форму
+        </button>
+    </div>
+    
+    <div class="card p-3">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Survey ID (для вебхука)</th>
+                    <th class="text-end">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in forms %}
+                <tr>
+                    <td>{{ f.id }}</td>
+                    <td><strong>{{ f.name }}</strong></td>
+                    <td><code>{{ f.survey_id }}</code></td>
+                    <td class="text-end">
+                        <form method="POST" action="/forms/delete/{{ f.id }}" class="d-inline" onsubmit="return confirm('Удалить форму «{{ f.name }}»?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Удалить">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center text-muted py-4">У вас пока нет добавленных форм</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Модальное окно добавления формы -->
+    <div class="modal fade" id="addFormModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="POST" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Новая Яндекс.Форма</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Название (для себя)</label>
+                <input type="text" name="name" class="form-control" required placeholder="Например: Заявки с сайта">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Survey ID</label>
+                <input type="text" name="survey_id" class="form-control" required placeholder="6ac8abc7e010db23d131923a">
+                <div class="form-text">Можно найти в настройках формы в Яндексе.</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+{% endblock %}

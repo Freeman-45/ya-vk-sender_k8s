@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="d-flex justify-content-between mb-4">
+        <h5>ВК Сообщества (Боты)</h5>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addBotModal">
+            <i class="fa-solid fa-plus"></i> Подключить ВК
+        </button>
+    </div>
+    
+    <div class="card p-3">
+        <table class="table align-middle">
+            <thead>
+                <tr><th>ID</th><th>Название</th><th>Group ID</th><th>Токен</th></tr>
+            </thead>
+            <tbody>
+                {% for b in bots %}
+                <tr>
+                    <td>{{ b.id }}</td>
+                    <td><strong>{{ b.name }}</strong></td>
+                    <td>{{ b.group_id }}</td>
+                    <td><span class="badge bg-secondary">Зашифрован и скрыт</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-center text-muted py-4">У вас пока нет подключенных сообществ</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Модальное окно добавления -->
+    <div class="modal fade" id="addBotModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form method="POST" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Новый ВК Бот</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Название бота</label>
+                <input type="text" name="name" class="form-control" required placeholder="Бот техподдержки">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">ID Сообщества (Group ID)</label>
+                <input type="text" name="group_id" class="form-control" required placeholder="123456789">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ключ доступа (Access Token)</label>
+                <input type="password" name="vk_token" class="form-control" required placeholder="vk1.a...">
+                <div class="form-text text-danger">Токен будет зашифрован перед сохранением в базе.</div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Подключить</button>
+          </div>
+        </form>
+      </div>
+    </div>
+{% endblock %}
