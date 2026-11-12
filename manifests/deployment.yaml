@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yandex-vk-bot
+  labels:
+    app: yandex-vk-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yandex-vk-bot
+  template:
+    metadata:
+      labels:
+        app: yandex-vk-bot
+    spec:
+      containers:
+      - name: yandex-vk-bot
+        image: yandex-vk-bot:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: VK_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: yandex-vk-bot-secret
+              key: VK_TOKEN
+        - name: VK_GROUP_ID
+          valueFrom:
+            configMapKeyRef:
+              name: yandex-vk-bot-config
+              key: VK_GROUP_ID
+        - name: RECIPIENT_IDS
+          valueFrom:
+            configMapKeyRef:
+              name: yandex-vk-bot-config
+              key: RECIPIENT_IDS
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"

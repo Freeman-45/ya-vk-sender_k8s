@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- manifests/deployment.yaml
+- manifests/service.yaml
+- config/configmap.yaml
+- secrets/secret.yaml
+
+# Опционально: раскомментируйте для использования Ingress
+# - manifests/ingress.yaml
+
+configMapGenerator:
+- name: yandex-vk-bot-config
+  literals:
+  - VK_GROUP_ID=123456
+  - RECIPIENT_IDS=12345,54321
+  options:
+    disableNameSuffixHash: true
+
+secretGenerator:
+- name: yandex-vk-bot-secret
+  literals:
+  - VK_TOKEN=vk1.a.Q5PVBjF_
+  options:
+    disableNameSuffixHash: true
